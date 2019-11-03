@@ -25,6 +25,10 @@ import (
 	"syscall"
 )
 
+var environment = []string{
+	"PATH=/usr/sbin:/usr/bin:/sbin:/bin",
+}
+
 func main() {
 	switch os.Args[1] {
 	case "run":
@@ -41,6 +45,7 @@ func run() {
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
+	cmd.Env = environment
 	cmd.SysProcAttr = setup()
 
 	must(cmd.Run())

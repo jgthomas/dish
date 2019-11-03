@@ -11,6 +11,10 @@ NAMESPACES
   MNT : syscall.CLONE_NEWNS
 
   USER : syscall.CLONE_NEWUSER
+
+  IPC : syscall.CLONE_NEWIPC
+
+  NET : syscall.CLONE_NEWNET
 */
 package main
 

@@ -47,7 +47,9 @@ func setup() *syscall.SysProcAttr {
 		Cloneflags: syscall.CLONE_NEWUTS |
 			syscall.CLONE_NEWPID |
 			syscall.CLONE_NEWNS |
-			syscall.CLONE_NEWUSER,
+			syscall.CLONE_NEWUSER |
+			syscall.CLONE_NEWIPC |
+			syscall.CLONE_NEWNET,
 		UidMappings: []syscall.SysProcIDMap{
 			{
 				ContainerID: 0,

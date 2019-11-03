@@ -37,7 +37,13 @@ func run() {
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	cmd.SysProcAttr = &syscall.SysProcAttr{
+	cmd.SysProcAttr = setup()
+
+	must(cmd.Run())
+}
+
+func setup() *syscall.SysProcAttr {
+	return &syscall.SysProcAttr{
 		Cloneflags: syscall.CLONE_NEWUTS |
 			syscall.CLONE_NEWPID |
 			syscall.CLONE_NEWNS |
@@ -57,8 +63,6 @@ func run() {
 			},
 		},
 	}
-
-	must(cmd.Run())
 }
 
 func child() {

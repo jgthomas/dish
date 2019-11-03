@@ -1,11 +1,14 @@
 /*
-FLAGS
-  syscall.CLONE_NEWUTS
+NAMESPACES
+
+  UTS : syscall.CLONE_NEWUTS
   - unix time sharing system
   - protects the hostname
 
-  syscall.CLONE_NEWPID
+  PID : syscall.CLONE_NEWPID
   - new process ID
+
+  MNT : syscall.CLONE_NEWNS
 */
 package main
 
@@ -33,7 +36,7 @@ func run() {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.SysProcAttr = &syscall.SysProcAttr{
-		Cloneflags: syscall.CLONE_NEWUTS | syscall.CLONE_NEWPID,
+		Cloneflags: syscall.CLONE_NEWUTS | syscall.CLONE_NEWPID | syscall.CLONE_NEWNS,
 	}
 
 	must(cmd.Run())

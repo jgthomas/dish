@@ -9,6 +9,8 @@ NAMESPACES
   - new process ID
 
   MNT : syscall.CLONE_NEWNS
+
+  USER : syscall.CLONE_NEWUSER
 */
 package main
 
@@ -38,7 +40,22 @@ func run() {
 	cmd.SysProcAttr = &syscall.SysProcAttr{
 		Cloneflags: syscall.CLONE_NEWUTS |
 			syscall.CLONE_NEWPID |
-			syscall.CLONE_NEWNS,
+			syscall.CLONE_NEWNS |
+			syscall.CLONE_NEWUSER,
+		UidMappings: []syscall.SysProcIDMap{
+			{
+				ContainerID: 0,
+				HostID:      os.Getuid(),
+				Size:        1,
+			},
+		},
+		GidMappings: []syscall.SysProcIDMap{
+			{
+				ContainerID: 0,
+				HostID:      os.Getgid(),
+				Size:        1,
+			},
+		},
 	}
 
 	must(cmd.Run())

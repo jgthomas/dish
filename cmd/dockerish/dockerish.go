@@ -31,6 +31,7 @@ var environment = []string{
 		"/usr/sbin:" +
 		"/usr/bin:" +
 		"/sbin:/bin",
+	"PS1=container $ ",
 }
 
 func main() {

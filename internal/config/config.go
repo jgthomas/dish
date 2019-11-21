@@ -5,32 +5,28 @@ import (
 	"syscall"
 )
 
-var Environment = []string{
-	"PATH=/usr/local/sbin:" +
-		"/usr/local/bin:" +
-		"/usr/sbin:" +
-		"/usr/bin:" +
-		"/sbin:/bin",
-	"PS1=container $ ",
+const path = "PATH=/usr/local/sbin:" +
+	"/usr/local/bin:" +
+	"/usr/sbin:" +
+	"/usr/bin:" +
+	"/sbin:/bin"
+
+const prompt = "PS1=container $ "
+
+func Environment() []string {
+	return []string{
+		path,
+		prompt,
+	}
 }
 
 /*
-  UTS : syscall.CLONE_NEWUTS
-  - unix time sharing system
-
-  PID : syscall.CLONE_NEWPID
-  - process ID
-
-  MNT : syscall.CLONE_NEWNS
-  - mount points
-
-  USER : syscall.CLONE_NEWUSER
-  - users
-
-  IPC : syscall.CLONE_NEWIPC
-
-  NET : syscall.CLONE_NEWNET
-  - networking
+  UTS  : syscall.CLONE_NEWUTS  - hostname
+  PID  : syscall.CLONE_NEWPID  - process ID
+  MNT  : syscall.CLONE_NEWNS   - mount points
+  USER : syscall.CLONE_NEWUSER - users
+  IPC  : syscall.CLONE_NEWIPC  - ????
+  NET  : syscall.CLONE_NEWNET  - networking
 */
 func Attributes() *syscall.SysProcAttr {
 	return &syscall.SysProcAttr{

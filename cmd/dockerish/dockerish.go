@@ -25,7 +25,7 @@ func run() {
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	cmd.Env = config.Environment
+	cmd.Env = config.Environment()
 	cmd.SysProcAttr = config.Attributes()
 
 	must(cmd.Run())

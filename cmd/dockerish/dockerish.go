@@ -23,16 +23,9 @@ import (
 	"os"
 	"os/exec"
 	"syscall"
-)
 
-var environment = []string{
-	"PATH=/usr/local/sbin:" +
-		"/usr/local/bin:" +
-		"/usr/sbin:" +
-		"/usr/bin:" +
-		"/sbin:/bin",
-	"PS1=container $ ",
-}
+	"github.com/jgthomas/dockerish/internal/config"
+)
 
 func main() {
 	switch os.Args[1] {
@@ -50,7 +43,7 @@ func run() {
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	cmd.Env = environment
+	cmd.Env = config.Environment
 	cmd.SysProcAttr = setup()
 
 	must(cmd.Run())

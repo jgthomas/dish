@@ -15,14 +15,17 @@ const rootfs = "/home/james/xenial-root"
 const root = "/"
 
 func main() {
-	switch os.Args[1] {
-	case "run":
-		run()
-	case "dish":
-		dish()
-	default:
-		panic("what")
+	if len(os.Args) > 1 {
+		switch os.Args[1] {
+		case "run":
+			run()
+		case "dish":
+			dish()
+		default:
+			panic("wut")
+		}
 	}
+	panic("give me args man!")
 }
 
 func run() {

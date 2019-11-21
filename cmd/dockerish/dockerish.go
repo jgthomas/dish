@@ -1,21 +1,3 @@
-/*
-NAMESPACES
-
-  UTS : syscall.CLONE_NEWUTS
-  - unix time sharing system
-  - protects the hostname
-
-  PID : syscall.CLONE_NEWPID
-  - new process ID
-
-  MNT : syscall.CLONE_NEWNS
-
-  USER : syscall.CLONE_NEWUSER
-
-  IPC : syscall.CLONE_NEWIPC
-
-  NET : syscall.CLONE_NEWNET
-*/
 package main
 
 import (
@@ -44,34 +26,9 @@ func run() {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Env = config.Environment
-	cmd.SysProcAttr = setup()
+	cmd.SysProcAttr = config.Attributes()
 
 	must(cmd.Run())
-}
-
-func setup() *syscall.SysProcAttr {
-	return &syscall.SysProcAttr{
-		Cloneflags: syscall.CLONE_NEWUTS |
-			syscall.CLONE_NEWPID |
-			syscall.CLONE_NEWNS |
-			syscall.CLONE_NEWUSER |
-			syscall.CLONE_NEWIPC |
-			syscall.CLONE_NEWNET,
-		UidMappings: []syscall.SysProcIDMap{
-			{
-				ContainerID: 0,
-				HostID:      os.Getuid(),
-				Size:        1,
-			},
-		},
-		GidMappings: []syscall.SysProcIDMap{
-			{
-				ContainerID: 0,
-				HostID:      os.Getgid(),
-				Size:        1,
-			},
-		},
-	}
 }
 
 func child() {

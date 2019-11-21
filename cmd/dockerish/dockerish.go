@@ -7,7 +7,10 @@ import (
 	"syscall"
 
 	"github.com/jgthomas/dockerish/internal/config"
+	"github.com/jgthomas/dockerish/internal/util"
 )
+
+const runSelf = "/proc/self/exe"
 
 func main() {
 	switch os.Args[1] {
@@ -21,14 +24,14 @@ func main() {
 }
 
 func run() {
-	cmd := exec.Command("/proc/self/exe", append([]string{"child"}, os.Args[2:]...)...)
+	cmd := exec.Command(runSelf, append([]string{"child"}, os.Args[2:]...)...)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Env = config.Environment()
 	cmd.SysProcAttr = config.Attributes()
 
-	must(cmd.Run())
+	util.Must(cmd.Run())
 }
 
 func child() {
@@ -39,14 +42,8 @@ func child() {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
-	must(syscall.Chroot("/home/james/xenial-root"))
-	must(os.Chdir("/"))
-	must(syscall.Mount("proc", "proc", "proc", 0, ""))
-	must(cmd.Run())
-}
-
-func must(err error) {
-	if err != nil {
-		panic(err)
-	}
+	util.Must(syscall.Chroot("/home/james/xenial-root"))
+	util.Must(os.Chdir("/"))
+	util.Must(syscall.Mount("proc", "proc", "proc", 0, ""))
+	util.Must(cmd.Run())
 }

@@ -14,9 +14,6 @@ const runSelf = "/proc/self/exe"
 const rootfs = "/home/james/xenial-root"
 const root = "/"
 
-const secondCmd = "child"
-const shell = "/bin/sh"
-
 func main() {
 	switch os.Args[1] {
 	case "run":
@@ -29,7 +26,7 @@ func main() {
 }
 
 func run() {
-	cmd := exec.Command(runSelf, secondCmd, shell)
+	cmd := exec.Command(runSelf, append([]string{"child"}, os.Args[2:]...)...)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

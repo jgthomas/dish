@@ -24,8 +24,9 @@ func main() {
 		default:
 			panic("wut")
 		}
+	} else {
+		panic("give me args man!")
 	}
-	panic("give me args man!")
 }
 
 func run() {

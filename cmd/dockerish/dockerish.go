@@ -18,15 +18,15 @@ func main() {
 	switch os.Args[1] {
 	case "run":
 		run()
-	case "child":
-		child()
+	case "dish":
+		dish()
 	default:
 		panic("what")
 	}
 }
 
 func run() {
-	cmd := exec.Command(runSelf, append([]string{"child"}, os.Args[2:]...)...)
+	cmd := exec.Command(runSelf, append([]string{"dish"}, os.Args[2:]...)...)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -36,7 +36,7 @@ func run() {
 	util.Must(cmd.Run())
 }
 
-func child() {
+func dish() {
 	fmt.Printf(
 		"running %v as PID %d\n",
 		os.Args[2:],

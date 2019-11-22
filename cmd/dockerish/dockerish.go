@@ -13,6 +13,7 @@ import (
 const runSelf = "/proc/self/exe"
 const rootfs = "/home/james/xenial-root"
 const root = "/"
+const hostname = "container"
 
 func main() {
 	if len(os.Args) > 1 {
@@ -52,6 +53,7 @@ func dish() {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
+	config.SetHostname(hostname)
 	util.Must(syscall.Chroot(rootfs))
 	util.Must(os.Chdir(root))
 	util.Must(syscall.Mount("proc", "proc", "proc", 0, ""))

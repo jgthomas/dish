@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"syscall"
 )
@@ -51,4 +52,11 @@ func Attributes() *syscall.SysProcAttr {
 			},
 		},
 	}
+}
+
+func SetHostname(hostname string) error {
+	if err := syscall.Sethostname([]byte(hostname)); err != nil {
+		return fmt.Errorf("Setting hostname: %v", err)
+	}
+	return nil
 }

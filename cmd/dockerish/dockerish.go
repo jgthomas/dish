@@ -10,7 +10,6 @@ import (
 
 const runSelf = "/proc/self/exe"
 const rootfs = "/home/james/xenial-root"
-const root = "/"
 const hostname = "container"
 
 func main() {

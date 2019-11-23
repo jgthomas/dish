@@ -70,7 +70,7 @@ func PivotRoot(newroot string) error {
 	pivotRoot := "/.pivot_root"
 	putold := filepath.Join(newroot, pivotRoot)
 
-	// Bind mount newroot to itsef to satisfy pivot_root demand that
+	// Bind mount newroot to itself to satisfy pivot_root demand that
 	// newroot and putold not be on same filesystem as the old root
 	err := syscall.Mount(
 		newroot,

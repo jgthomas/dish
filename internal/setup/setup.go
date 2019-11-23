@@ -108,7 +108,8 @@ func PivotRoot(newroot string) error {
 }
 
 func SetHostname(hostname string) error {
-	if err := syscall.Sethostname([]byte(hostname)); err != nil {
+	err := syscall.Sethostname([]byte(hostname))
+	if err != nil {
 		return fmt.Errorf("Setting hostname: %v", err)
 	}
 	return nil

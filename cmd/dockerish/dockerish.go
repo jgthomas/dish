@@ -6,7 +6,6 @@ import (
 	"os/exec"
 
 	"github.com/jgthomas/dockerish/internal/config"
-	"github.com/jgthomas/dockerish/internal/util"
 )
 
 const runSelf = "/proc/self/exe"
@@ -37,7 +36,10 @@ func run() {
 	cmd.Env = config.Environment()
 	cmd.SysProcAttr = config.Attributes()
 
-	util.Must(cmd.Run())
+	err := cmd.Run()
+	if err != nil {
+		panic(err)
+	}
 }
 
 func dish() {
@@ -52,9 +54,23 @@ func dish() {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
-	util.Must(config.Mount(rootfs))
-	util.Must(config.PivotRoot(rootfs))
-	util.Must(config.SetHostname(hostname))
+	err := config.Mount(rootfs)
+	if err != nil {
+		panic(err)
+	}
 
-	util.Must(cmd.Run())
+	err = config.PivotRoot(rootfs)
+	if err != nil {
+		panic(err)
+	}
+
+	err = config.SetHostname(hostname)
+	if err != nil {
+		panic(err)
+	}
+
+	err = cmd.Run()
+	if err != nil {
+		panic(err)
+	}
 }

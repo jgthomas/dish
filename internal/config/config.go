@@ -71,7 +71,7 @@ func PivotRoot(newroot string) error {
 	putold := filepath.Join(newroot, "/.pivot_root")
 
 	// bind mount newroot to itsef to satisfy pivot_root demand that
-	// newroot and putold not be on same filesystem
+	// newroot and putold not be on same filesystem as the old root
 	err := syscall.Mount(newroot, newroot, "", syscall.MS_BIND|syscall.MS_REC, "")
 	if err != nil {
 		return fmt.Errorf("Error mounting rootfs to itself %v", err)

@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"syscall"
 )
 
@@ -52,6 +53,62 @@ func Attributes() *syscall.SysProcAttr {
 			},
 		},
 	}
+}
+
+func Mount(root string) error {
+	mountPoint := "/proc"
+	target := filepath.Join(root, mountPoint)
+
+	err := syscall.Mount(mountPoint, target, "proc", 0, "")
+	if err != nil {
+		return fmt.Errorf("Failed to mount %s to %s: %v", mountPoint, target, err)
+	}
+	return nil
+}
+
+func PivotRoot(newroot string) error {
+	// make put old
+	putold := filepath.Join(newroot, "/.pivot_root")
+
+	// bind mount newroot to itsef to satisfy pivot_root demand that
+	// newroot and putold not be on same filesystem
+	err := syscall.Mount(newroot, newroot, "", syscall.MS_BIND|syscall.MS_REC, "")
+	if err != nil {
+		return fmt.Errorf("Error mounting rootfs to itself %v", err)
+	}
+
+	// create putold directory
+	err = os.MkdirAll(putold, 0777)
+	if err != nil {
+		return err
+	}
+
+	// call pivot_root
+	err = syscall.PivotRoot(newroot, putold)
+	if err != nil {
+		return fmt.Errorf("pivot_root %v", err)
+	}
+
+	// set working directory to new root
+	err = syscall.Chdir("/")
+	if err != nil {
+		return fmt.Errorf("chdir / %v", err)
+	}
+
+	// unmount put_old, now at /.pivot_root
+	putold = "/.pivot_root"
+	err = syscall.Unmount(putold, syscall.MNT_DETACH)
+	if err != nil {
+		return fmt.Errorf("Unmount pivot_root dir %v", err)
+	}
+
+	// remove put_old
+	err = os.Remove(putold)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func SetHostname(hostname string) error {

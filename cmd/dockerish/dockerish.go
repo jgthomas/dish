@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"syscall"
 
 	"github.com/jgthomas/dockerish/internal/config"
 	"github.com/jgthomas/dockerish/internal/util"
@@ -53,9 +52,9 @@ func dish() {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
-	config.SetHostname(hostname)
-	util.Must(syscall.Chroot(rootfs))
-	util.Must(os.Chdir(root))
-	util.Must(syscall.Mount("proc", "proc", "proc", 0, ""))
+	util.Must(config.Mount(rootfs))
+	util.Must(config.PivotRoot(rootfs))
+	util.Must(config.SetHostname(hostname))
+
 	util.Must(cmd.Run())
 }

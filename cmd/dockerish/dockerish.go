@@ -54,22 +54,20 @@ func dish() {
 	cmd.Stderr = os.Stderr
 
 	err := setup.Mount(rootfs)
-	if err != nil {
-		panic(err)
-	}
+	handleError(err, "Failed to mount")
 
 	err = setup.PivotRoot(rootfs)
-	if err != nil {
-		panic(err)
-	}
+	handleError(err, "Failed to pivot root")
 
 	err = setup.SetHostname(hostname)
-	if err != nil {
-		panic(err)
-	}
+	handleError(err, "Failed to set hostname")
 
 	err = cmd.Run()
+	handleError(err, "Failed to run command")
+}
+
+func handleError(err error, message string) {
 	if err != nil {
-		panic(err)
+		panic(message + ": " + err.Error())
 	}
 }

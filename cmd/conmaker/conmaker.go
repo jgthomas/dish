@@ -31,7 +31,37 @@ func main() {
 }
 
 func makecon(name string) {
-	opts := options(name) 
-	cmd := exec.Command(strap, opts...)
-	cmd.Run()
+	baseRelease := imageBase + release
+	baseFound := checkDirExists(baseRelease)
+	newContainer := imageBase + name
+
+	if (!baseFound) {
+	    opts := options(release)
+	    cmd := exec.Command(strap, opts...)
+		cmd.Run()
+	}
+
+	changePermissions(baseRelease)
+	copyCmd := exec.Command("cp", "-rf", baseRelease, newContainer)
+	copyCmd.Run()
+	changePermissions(newContainer)
+}
+
+func checkDirExists(path string) bool {
+	_, err := os.Stat(path)
+	if err != nil {
+		return false
+	}
+	return true
+}
+
+func changePermissions(path string) {
+	err := os.Chmod(path, 0777)
+	handleError(err)
+}
+
+func handleError(err error) {
+	if err != nil {
+		panic(err)
+	}
 }

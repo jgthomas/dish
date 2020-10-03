@@ -34,11 +34,7 @@ func run() {
 	cmd.Stderr = os.Stderr
 	cmd.Env = setup.Environment()
 	cmd.SysProcAttr = setup.Attributes()
-
-	err := cmd.Run()
-	if err != nil {
-		panic(err)
-	}
+	cmd.Run()
 }
 
 func dish() {

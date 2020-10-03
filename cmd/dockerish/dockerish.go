@@ -28,7 +28,7 @@ func main() {
 }
 
 func run() {
-	cmd := exec.Command(runSelf, append([]string{"dish"}, os.Args[2:]...)...)
+	cmd := exec.Command(runSelf, append([]string{"dish", "/bin/bash"}, os.Args[2:]...)...)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

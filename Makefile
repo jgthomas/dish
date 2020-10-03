@@ -6,7 +6,7 @@ RUN_COMMAND=run
 SHELL_COMMAND=/bin/bash
 
 launch:
-	go run ${PROJECT_PATH} ${RUN_COMMAND} ${SHELL_COMMAND}
+	go run ${PROJECT_PATH} ${RUN_COMMAND}
 
 build:
 	go build -o ${PROJECT_NAME} ${PROJECT_PATH}

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 
@@ -9,26 +8,25 @@ import (
 )
 
 const runSelf = "/proc/self/exe"
-const rootfs = "/home/james/xenial-root"
-const hostname = "container"
+const imageBase = "/home/james/dish_images/"
 
 func main() {
-	if len(os.Args) > 1 {
+	if len(os.Args) > 2 {
 		switch os.Args[1] {
 		case "run":
-			run()
+			run(os.Args[2])
 		case "dish":
 			dish()
 		default:
-			panic("wut")
+			panic("wut!")
 		}
 	} else {
 		panic("give me args man!")
 	}
 }
 
-func run() {
-	cmd := exec.Command(runSelf, []string{"dish", "/bin/bash"}...)
+func run(containerName string) {
+	cmd := exec.Command(runSelf, []string{"dish", containerName, "/bin/bash"}...)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -38,24 +36,22 @@ func run() {
 }
 
 func dish() {
-	fmt.Printf(
-		"running %v as PID %d\n",
-		os.Args[2:],
-		os.Getpid(),
-	)
+	containerName := os.Args[2]
 
-	cmd := exec.Command(os.Args[2], os.Args[3:]...)
+	cmd := exec.Command(os.Args[3], os.Args[4:]...)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
-	err := setup.Mount(rootfs)
+	filesystem := imageBase + containerName
+
+	err := setup.Mount(filesystem)
 	handleError(err, "Failed to mount")
 
-	err = setup.PivotRoot(rootfs)
+	err = setup.PivotRoot(filesystem)
 	handleError(err, "Failed to pivot root")
 
-	err = setup.SetHostname(hostname)
+	err = setup.SetHostname(containerName)
 	handleError(err, "Failed to set hostname")
 
 	err = cmd.Run()
@@ -66,4 +62,12 @@ func handleError(err error, message string) {
 	if err != nil {
 		panic(message + ": " + err.Error())
 	}
+}
+
+func checkDirExists(path string) bool {
+	_, err := os.Stat(path)
+	if err != nil {
+		return false
+	}
+	return true
 }

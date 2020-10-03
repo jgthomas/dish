@@ -15,10 +15,13 @@ const path = "PATH=/usr/local/sbin:" +
 
 const prompt = "PS1=container $ "
 
+const term = "TERM=xterm"
+
 func Environment() []string {
 	return []string{
 		path,
 		prompt,
+		term,
 	}
 }
 

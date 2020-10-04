@@ -10,6 +10,7 @@ import (
 const runSelf = "/proc/self/exe"
 const imageBase = "/home/james/dish_images/"
 
+// Cook prepares the process to be re-run
 func Cook(containerName string) {
 	cmd := exec.Command(runSelf, []string{"dish", containerName, "/bin/bash"}...)
 	cmd.Stdin = os.Stdin
@@ -20,6 +21,7 @@ func Cook(containerName string) {
 	cmd.Run()
 }
 
+// Serve sets up the container
 func Serve() {
 	containerName := os.Args[2]
 

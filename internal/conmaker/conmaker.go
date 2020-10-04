@@ -22,6 +22,7 @@ func options(name string) []string {
 	}
 }
 
+// Make the new container filesystem
 func Make(containerName string) {
 	makecon(containerName)
 }

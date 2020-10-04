@@ -17,6 +17,7 @@ const prompt = "PS1=container $ "
 
 const term = "TERM=xterm"
 
+// Environment variables for the container
 func Environment() []string {
 	return []string{
 		path,
@@ -25,6 +26,7 @@ func Environment() []string {
 	}
 }
 
+// Attributes and namespaces for the container
 /*
   UTS  : syscall.CLONE_NEWUTS  - hostname
   PID  : syscall.CLONE_NEWPID  - process ID
@@ -58,6 +60,7 @@ func Attributes() *syscall.SysProcAttr {
 	}
 }
 
+// Mount the proc filesystem to the container
 func Mount(root string) error {
 	mountPoint := "/proc"
 	target := filepath.Join(root, mountPoint)
@@ -69,6 +72,7 @@ func Mount(root string) error {
 	return nil
 }
 
+// PivotRoot switches to the new namespace root in the container
 func PivotRoot(newroot string) error {
 	pivotRoot := "/.pivot_root"
 	putold := filepath.Join(newroot, pivotRoot)
@@ -110,6 +114,7 @@ func PivotRoot(newroot string) error {
 	return os.Remove(putold)
 }
 
+// SetHostname on the container
 func SetHostname(hostname string) error {
 	err := syscall.Sethostname([]byte(hostname))
 	if err != nil {
